@@ -50,27 +50,35 @@ print(segredo_1)
 # =====================================================================================================
 # Cores
 
-f_verde    = '\033[42m' # f = fundo
-f_amarelo  = '\033[43m'
-padrao     = '\033[0m' 
+f_verde    = '\033[42m' # Verde   = Letra certa, lugar certo
+f_amarelo  = '\033[43m' # Amarelo = Letra certa, lugar errado
+f_preto    = '\033[40m' # Preto   = Letra não existente
+padrao     = '\033[0m'  # Resetar
 
 
 # =====================================================================================================
 # Parte principal.
-
 rodou()
-while True:
+
+tentativas = 7
+
+while tentativas > 0:
     
-    termo = (input('Escreva uma palavra de 5 dígitos: ')) # Pede o termo.
+    termo = (input('Escreva uma palavra de 5 dígitos: ')).upper() # Pede o termo.
     
-    l_termo = [0, 1, 2, 3, 4]
-    for let in range(0,5):
+    #l_palavras = [[],[]]
+
+    for let in range(len(termo)):
         if termo[let] == segredo_1[let]:
-            print(f_verde, let, padrao)
+            print(f_verde, termo[let], padrao, end='')
+
         elif termo[let] in segredo_1:
-            print(f_amarelo, let, padrao)
+            print(f_amarelo, termo[let], padrao, end='')
+
         else:
-            print(let)
+            print(f_preto, termo[let], padrao, end='')
+
+
 
 
 
