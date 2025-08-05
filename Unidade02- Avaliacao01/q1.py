@@ -1,4 +1,5 @@
 #ALUNO: Roberto Araujo Batista, Matricula: 20251014050041
+#ALUNO: Ryan Guilherme Costa De Moura, Matricula: 20242014050039
 #PROFESSOR: Galileu Batista, CURSO: redes de computadores 2025.1, IFRN
 
 '''
@@ -23,6 +24,8 @@ Em todas as operações que requerem entrada de CPF e MAC adresses, valide-os
     08333839495 : ['00:1A:2B:3C:4D:5E', '0-1A-2B-3C-4D-5E']
 }
 '''
+# =========================================================================================================================
+# Área do CPF
 
 
 def cadastrar_cpf(banco):
@@ -90,6 +93,11 @@ def listar_cpf(dados):
             print(cpf)
         input('pressione enter para voltar ao menu principal')    
 
+
+# =========================================================================================================================
+# Área do Mac
+        
+
 def adicionar_mac(banco):
     global dados
     cpf = input('Digite o cpf: ')
@@ -136,7 +144,8 @@ def listar_mac():
         while pos < len(dados[cpf]):
             print(f'{pos}. {mac}')
             pos = pos +1
-
+# =========================================================================================================================
+            
 
 '''
 EXEMPLO DE CÓDIGO
@@ -147,6 +156,9 @@ dados[cpf] = dados[cpf] + ['0-1A-2B-3C-4D-5E']
 
 print(dados)
 '''
+# =========================================================================================================================
+# Código principal
+
 
 dados = dict() #dicionario que irá receber o banco de dados
 
@@ -189,8 +201,4 @@ while True:
     else:
         print('essa opção não existe')
 
-
-
-
-
-
+# =========================================================================================================================
