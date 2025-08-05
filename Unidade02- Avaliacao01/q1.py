@@ -46,8 +46,14 @@ def cadastrar_cpf(banco):
         return banco
     
 
-def validar_cpf(cpf):
+def cpf_valido(cpf):
+    try:
+        cpf = int(cpf)
+    except ValueError:
+        return False
     
+
+'''
     if len(cpf) != 11: # Se o cpf tiver mais, ou menos, que 11 dígitos retorna False.
         print('O cpf só pode ter 11 dígitos. ex: 12345678901. ')
         return False
@@ -56,6 +62,7 @@ def validar_cpf(cpf):
         return False
     
     soma = 0 # -- > necessária para os dígitos verificadores
+'''
 
 def remover_cpf(banco):
     #remover cpf apenas se a lista estiver vazia

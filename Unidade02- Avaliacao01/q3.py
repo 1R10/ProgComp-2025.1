@@ -1,20 +1,26 @@
+'''
+3) Faça um programa que implementa o termo (www.term.ooo) na sua
+versão dueto. Nessa versão existem duas palavras a serem descobertas. Em cada
+rodada o usuário informa uma palavra, que é confrontada com as duas a serem
+descobertas. O usuário vence quando descobre as duas palavras em até sete
+tentativas. Mostre as palavras com as mesmas cores do referido sítio e crie uma lista
+com as palavras válidas (se o usuário digitar outra, não será aceita).
+'''
+
+
 # Aluno: Ryan Guilherme Costa de Moura; 20242014050039
+# Aluno: Roberto Araujo Batista; 20251014050041
 # =====================================================================================================
 # Checklist
 #
 #   Tratamento de erros......NOK
-#     --> Tamanho.............OK
 #     --> Palavra válida.....NOK
+#     --> Palavra Repetida....OK
+#     --> Tamanho.............OK
 #     --> Tentativas..........OK
 #   Cores.....................OK
 #   Tratamento de cores.......OK
 #   Encerramento..............OK
-
-
-# =====================================================================================================
-# Parte de gerenciamento de palavras
-
-import random #, requests
     
 '''sites_palavras = ( # Sites, do próprio termo, para validar as palavras.
                     'https://raw.githubusercontent.com/fserb/pt-br/refs/heads/master/palavras'             ,
@@ -27,38 +33,46 @@ import random #, requests
                     'https://github.com/fserb/pt-br/raw/refs/heads/master/data'                            ,
                     'https://github.com/fserb/pt-br/raw/refs/heads/master/continentes'                      )'''
 
-palavras         = ( # Palavras do jogo
-    "ADAGA", "ADUBO", "AMIGO", "ANEXO", "ARAME", "ARARA", "ARROZ",
-    "ASILO", "ASTRO", "BAILE", "BAIXA", "BALAO", "BALSA", "BARCO",
-    "BARRO", "BEIJO", "BICHO", "BORDA", "BORRA", "BRAVO", "BREJO",
-    "BURRO", "CAIXA", "CALDO", "CANJA", "CARRO", "CARTA", "CERVO",
-    "CESTA", "CLIMA", "COBRA", "COLAR", "COQUE", "COURO", "CRAVO",
-    "DARDO", "FAIXA", "FARDO", "FENDA", "FERRO", "FESTA", "FLUOR",
-    "FORCA", "FORNO", "FORTE", "FUNDO", "GAITA", "GARRA", "GENIO",
-    "GESSO", "GRADE", "GRANA", "GRAMA", "GURIA", "GREVE", "GRUTA",
-    "HEROI", "HOTEL", "ICONE", "IMPAR", "IMUNE", "INDIO", "JUNTA",
-    "LAPIS", "LARVA", "LAZER", "LENTO", "LESTE", "LIMPO", "LIVRO",
-    "MACIO", "MAGRO", "MALHA", "MANSO", "MARCO", "METAL", "MORTE",
-    "MORRO", "MURAL", "MOVEL", "NACAO", "NINHO", "NOBRE", "NORMA",
-    "NORTE", "NUVEM", "PACTO", "PALHA", "PARDO", "PARTE", "PEDRA",
-    "PEDAL", "PEIXE", "PRADO", "PISTA", "POMBO", "POETA", "PONTO",
-    "PRATO", "PRECO", "PRESO", "PROSA", "PRUMO", "PULGA", "PULSO",
-    "QUEPE", "RAIVA", "RISCO", "RITMO", "ROSTO", "ROUPA", "SABAO",
-    "SALTO", "SENSO", "SINAL", "SITIO", "SONHO", "SOPRO", "SURDO",
-    "TARDE", "TERNO", "TERMO", "TERRA", "TIGRE", "TINTA", "TOLDO",
-    "TORRE", "TRAJE", "TREVO", "TROCO", "TRONO", "TURMA", "URUBU",
-    "VALSA", "VENTO", "VERDE", "VISAO", "VINHO", "VIUVO", "ZEBRA"
-)
+
+import termoo #import do programa feito pelo professor com as palavras a serem selecionadas como segredo
+
+# =====================================================================================================
+#FUNÇÕES
+def selecionar_segredos():
+#variáveis que serão para comparação
+    segredo_1 = termoo.palavras() # Escolhe do index 0 ao fim da lst.
+    segredo_2 = termoo.palavras()
+
+    while segredo_2 == segredo_1: # Caso as palavras sejam iguais, é gerado um looping até não serem mais.
+        segredo_2 = termoo.palavras()
+    return segredo_1, segredo_2
 
 
-segredo_1 = palavras[random.randint(0,len(palavras))] # Escolhe do index 0 ao fim da lst.
-segredo_2 = palavras[random.randint(0,len(palavras))]
+# Vai comparar letra por letra, colorir e salvar numa lista (cada palavra).
+def comparar_palavra(entrada, segredo):
+    palavra = []
+    for letra in range(len(entrada)): 
+        if entrada[letra] == segredo[letra]: # se letra está na pos certa, fica verde
+            palavra.append((f_verde, entrada[letra], padrao))
 
-while segredo_2 == segredo_1: # Caso as palavras sejam iguais, é gerado um looping até não serem mais.
-    segredo_2 = palavras[random.randint(0,len(palavras))]
-print(segredo_1, segredo_2)
+        elif entrada[letra] in segredo: # se letra na palavra, fica amarelo
+            palavra.append((f_amarelo, entrada[letra], padrao))
+
+        else: # não muda
+            palavra.append((f_preto, entrada[letra], padrao))
+    return palavra
+
+#vai exibir a palavra na formatação correta
+def exibir(palavra): # Puxa cada lista que vai ser criada com a palavra e cor e formata num print/for.
+    for fundo, letra, padrao in palavra: #como a lista tem 3 elementos, o for irá para de 3 em 3
+        print(f'{fundo}{letra}{padrao}', end='')
 
 
+
+
+
+
+#VARIÁVEIS
 # =====================================================================================================
 # Cores:
 
@@ -67,39 +81,44 @@ f_amarelo  = '\033[43m' # Amarelo = Letra certa, lugar errado
 f_preto    = '\033[40m' # Preto   = Letra não existente
 padrao     = '\033[0m'  # Resetar
 
-
-
-def formatar(palavra): # Puxa cdaa lista que vai ser criada com a palavra e cor e formata num print/for.
-    for fundo, letra, padrao in palavra:
-        print(f'{fundo}{letra}{padrao}', end='')
-    
-
 # =====================================================================================================
 # Tentativas:
 
 tentativas = 0
 
-d_tentativas = { # Dict para formatar a mensagem final com base na quantidade de tentativas.
-                1:'Impossível'    ,
-                2:'Ninja'         ,
-                3:'Impressionante',
-                4:'Interessante'  ,
-                5:'Pode melhorar' ,
-                6: 'Foi por pouco',
-                7:f'Palavras: {segredo_1}, {segredo_2}'}
+def func_tentativas(tentativas):    
+    d_tentativas = { # Dict para formatar a mensagem final com base na quantidade de tentativas.
+                    1:'Impossível'    ,
+                    2:'Ninja'         ,
+                    3:'Impressionante',
+                    4:'Interessante'  ,
+                    5:'Pode melhorar' ,
+                    6: 'Foi por pouco',
+                    7:f'Palavras: {segredo_1}, {segredo_2}'}
+    return d_tentativas[tentativas]
 
 
 # =====================================================================================================
-# Parte principal:
+
+
+# CÓDIGO MAIN()
+
+segredo_1, segredo_2 = selecionar_segredos()  #variáveis que o usuário deve adivinhar
+print(segredo_1, segredo_2)
 
 l_resposta = [[segredo_1], [segredo_2]]
 l_segredos = [[], []]
 
+entradas_palavras = list()
+
 while tentativas != 7:
     l_palavra = [[],[]] # resetar toda vez para a palavra não entrar na outra lista novamente.
     while True:
+        print(f'você tem {tentativas+1}/7 chances')
         termo = (input('Escreva uma palavra de 5 letras: ')).upper() # Pede o termo.
-        if len(termo) == 5 and termo.isalpha():
+
+        if (len(termo) == 5) and (termo.isalpha()) and not(termo in entradas_palavras): #verifica se é uma letra do alfabeto e se é repetida
+            entradas_palavras = entradas_palavras + [termo]
             break
         else:
             print('Termo inválido.')
@@ -108,37 +127,19 @@ while tentativas != 7:
     tentativas += 1 # Palavra válida = tentativa gasta.
     
 #   --------------------------------------------------------------------------------
-    # Vai comparar letra por letra, colorir e salvar numa lista (cada palavra).
-
-    for let in range(len(termo)): 
-        if termo[let] == segredo_1[let]:
-            l_palavra[0].append((f_verde, termo[let], padrao))
-
-        elif termo[let] in segredo_1:
-            l_palavra[0].append((f_amarelo, termo[let], padrao))
-
-        else:
-            l_palavra[0].append((f_preto, termo[let], padrao))
-
+    #l_palavra são variáveis apenas para exibição de saída    
+    l_palavra[0] = comparar_palavra(termo, segredo_1)
+    l_palavra[1] = comparar_palavra(termo, segredo_2)
+    #exibição com as cores corretas
+    exibir(l_palavra[0])
     print(' ', end='')
-
-    for let in range(len(termo)):
-        if termo[let] == segredo_2[let]:
-            l_palavra[1].append((f_verde, termo[let], padrao))
-
-        elif termo[let] in segredo_2:
-            l_palavra[1].append((f_amarelo, termo[let], padrao))
-
-        else:
-            l_palavra[1].append((f_preto, termo[let], padrao))
-#   ---------------------------------------------------------------------------------    
-#   Print formatado no def na aba de cores.    
-    formatar(l_palavra[0])
-    print(' ', end='')
-    formatar(l_palavra[1])
+    exibir(l_palavra[1])
     print('\n'*2)
 
+
+
 # ------------------------------------------------------------------------------------
+
 #   condição de vitória: se as listas forem iguais o jogo acaba.
     if termo == segredo_1:
         l_segredos[0].append(termo)
@@ -147,8 +148,4 @@ while tentativas != 7:
     if l_segredos == l_resposta:
         break
 
-print(f'\033[44m{d_tentativas[tentativas]} {padrao}')
-
-
-
-# =====================================================================================================
+print(f'\033[44m{func_tentativas(tentativas)} {padrao}')
