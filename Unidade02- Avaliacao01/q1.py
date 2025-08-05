@@ -35,7 +35,7 @@ def cadastrar_cpf(banco):
     #requisitos do cpf: ter 11 dígitos
     #se for a entrada de um inteiro ele corta o 0 inicial
     cpf = input('digite o cpf que você quer cadastrar: ')
-
+    cpf_valido(cpf)
 
     if cpf in banco.keys():
         print(f'esse cpf já está cadastrado no banco de dados.')
@@ -46,11 +46,48 @@ def cadastrar_cpf(banco):
         return banco
     
 
-def cpf_valido(cpf):
+def cpf_valido(cpf: str):
     try:
-        cpf = int(cpf)
+        cpf = str(cpf).replace('.', '').replace('-', '')
     except ValueError:
         return False
+    
+    if cpf.isdecimal() == False:
+        print('O cpf deve conter apenas números de 0-9.')
+        return False
+    
+    if len(cpf) != 11:
+        print('O cpf precisa ter 11 caracteres numéricos.')
+        return False
+
+
+    
+    # -------------------------------------------------------
+    # Digitos verificadores
+    soma = 0
+
+    for pos in range(9):
+        soma += int(cpf[pos]) * (10 - pos)
+    digito_verificador1 = 11 - soma % 11
+    if digito_verificador1 >= 10:
+        digito_verificador1 = 0
+    if digito_verificador1 != int(cpf[9]):
+        return False
+    
+    soma = 0
+
+    for pos in range(10):
+        soma += int(cpf[pos]) * (11 - pos)
+    digito_verificador2 = 11 - soma % 11
+    if digito_verificador2 >= 10:
+        digito_verificador2 = # perdi
+    if digito_verificador1 != int(cpf[10]):
+        # perdi
+        return False
+
+    # -------------------------------------------------------
+            
+
     
 
 '''
