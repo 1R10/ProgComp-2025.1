@@ -83,7 +83,7 @@ while tentativas != 7:
         print(f'você tem {tentativas + 1}/7 chances')
         termo = (input('Escreva uma palavra de 5 letras: ')).upper()  # Pede o termo.
     # verifica se é uma letra do alfabeto se tem 5 letras e se está dentro do conjunto de palavras válidas
-        if (len(termo) == 5) and (termo.isalpha()) and termo in termoo.palavras():
+        if (len(termo) == 5) and (termo.isalpha()):
             entradas_palavras = entradas_palavras + [termo] #seria para mostrar todas as palavras e ficar mais bonitinho
             break
         else:
