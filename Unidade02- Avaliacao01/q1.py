@@ -12,8 +12,8 @@ e) listar os CPF cadastrados; f) listar os MAC adresses vinculados a um CPF;
 
 
 segunda parte:
-g) salvar o “banco de dados” em um arquivo (perguntar o nome do arquivo); h) ler o
-“banco de dados” de um arquivo (perguntar o nome do arquivo). 
+g) salvar o “banco de dados” em um arquivo (perguntar o nome do arquivo);
+h) ler o “banco de dados” de um arquivo (perguntar o nome do arquivo). 
 Em todas as operações que requerem entrada de CPF e MAC adresses, valide-os
 '''
 
@@ -26,7 +26,7 @@ Em todas as operações que requerem entrada de CPF e MAC adresses, valide-os
 '''
 # =========================================================================================================================
 # Área do CPF
-
+from cpf import cpf_valido
 
 def cadastrar_cpf(banco):
     global dados
@@ -34,8 +34,7 @@ def cadastrar_cpf(banco):
 
     #requisitos do cpf: ter 11 dígitos
     #se for a entrada de um inteiro ele corta o 0 inicial
-    cpf = input('digite o cpf que você quer cadastrar: ')
-    cpf_valido(cpf)
+    
 
     if cpf in banco.keys():
         print(f'esse cpf já está cadastrado no banco de dados.')
@@ -46,47 +45,8 @@ def cadastrar_cpf(banco):
         return banco
     
 
-def cpf_valido(cpf: str):
-    try:
-        cpf = str(cpf).replace('.', '').replace('-', '')
-    except ValueError:
-        return False
-    
-    if cpf.isdecimal() == False:
-        print('O cpf deve conter apenas números de 0-9.')
-        return False
-    
-    if len(cpf) != 11:
-        print('O cpf precisa ter 11 caracteres numéricos.')
-        return False
 
-
-    
-    # -------------------------------------------------------
-    # Digitos verificadores
-    soma = 0
-
-    for pos in range(9):
-        soma += int(cpf[pos]) * (10 - pos)
-    digito_verificador1 = 11 - soma % 11
-    if digito_verificador1 >= 10:
-        digito_verificador1 = 0
-    if digito_verificador1 != int(cpf[9]):
-        return False
-    
-    soma = 0
-
-    for pos in range(10):
-        soma += int(cpf[pos]) * (11 - pos)
-    digito_verificador2 = 11 - soma % 11
-    if digito_verificador2 >= 10:
-        digito_verificador2 = # perdi
-    if digito_verificador1 != int(cpf[10]):
-        # perdi
-        return False
-
-    # -------------------------------------------------------
-            
+   
 
     
 
@@ -104,7 +64,6 @@ def cpf_valido(cpf: str):
 def remover_cpf(banco):
     #remover cpf apenas se a lista estiver vazia
     global dados
-    cpf = input('digite o cpf que você deseja remover: ')
     
     if cpf in dados.keys():
         if dados[cpf] == []: #se a lista de mac adrresses estiver vazia, você pode excluir cpf
@@ -144,11 +103,10 @@ def listar_cpf(dados):
 
 def adicionar_mac(banco):
     global dados
-    cpf = input('Digite o cpf: ')
 
     if cpf in dados.keys():
         print(dados[cpf])
-        mac = input('digite o mac a ser adicionado: \n')
+
         dados[cpf] = dados[cpf] + [mac]
         print(dados[cpf])
         input('')
@@ -160,7 +118,6 @@ def adicionar_mac(banco):
 def remover_mac():
     global dados
     
-    cpf = input('Digite o cpf: ')
     
     #exibir os macs do cpf
     pos = 0
@@ -179,7 +136,7 @@ def remover_mac():
 def listar_mac():
     global dados
     
-    cpf = input('Digite o cpf: ')
+    
     if dados[cpf] == []:
         print('a lista está vazia')
     #exibir os macs do cpf
@@ -188,9 +145,42 @@ def listar_mac():
         while pos < len(dados[cpf]):
             print(f'{pos}. {mac}')
             pos = pos +1
-# =========================================================================================================================
-            
 
+
+# =========================================================================================================================
+# Área do arquivo
+import json
+
+def salvar_banco(banco):
+    
+    try:
+        with open(nome_arquivo, 'w') as arq:# -- >abre e fecha arquivo em modo write (criando ele no processo)
+            for cpf, macs in banco.items():
+                linha = cpf + ':' + ','.join(macs) + '\n' #
+                arq.write(linha)
+        print(f'Banco de dados salvo com sucesso em "{nome_arquivo}"')
+    except:
+        print(f'Erro ao salvar o arquivo.')     
+
+
+def carregar_banco(banco):
+    try:
+        with open(nome_arquivo, 'r') as arq: # -- >abre e fecha arquivo em modo read
+            banco.clear() # --> limpar o atual pra receber o novo banco
+            for linha in arq:
+                linha = linha.strip()
+                if ':' in linha:
+                    cpf, macs_str = linha.split(':', 1)
+                    macs = macs_str.split(',') if macs_str else []
+                    banco[cpf] = macs
+        print(f'Banco de dados carregado com sucesso de "{nome_arquivo}"')
+    except FileNotFoundError:
+        print(f'O arquivo "{nome_arquivo}" não foi encontrado.')
+    except:
+        print(f'Erro ao ler o arquivo.')
+
+
+#=======================================================================
 '''
 EXEMPLO DE CÓDIGO
 dados = dict()
@@ -219,6 +209,8 @@ while True:
         4.Adicionar um Mac
         5.remover um Mac
         6.Listar Mac por CPF
+        7.Salvar banco de dados em arquivo
+        8.Ler banco de dados de um arquivo
         0.Sair
         ''')
         menu = int(input('digite uma opção: '))
@@ -231,17 +223,44 @@ while True:
     if menu == 0:
         break
     if menu == 1:
-        cadastrar_cpf(dados)
+        cpf = input('digite o cpf:')
+        if cpf_valido(cpf) == True:
+            cadastrar_cpf(dados)
+        
+        
     elif menu == 2:
-        remover_cpf(dados)
+        cpf = input('digite o cpf:')
+        if cpf in dados:
+            remover_cpf(dados)
+
     elif menu == 3:
         listar_cpf(dados)
+
     elif menu == 4:
-        adicionar_mac(dados)
+        cpf = input('digite o cpf:')
+        if cpf_valido(cpf):
+            mac = input('digite o mac a ser adicionado: \n')
+            adicionar_mac(dados)
+        
     elif menu == 5:
-        remover_mac()
+        cpf = input('digite o cpf:')
+        if cpf in dados:
+            remover_mac()
+
     elif menu == 6:
-        listar_mac()
+        cpf = input('Digite o cpf: ')
+        if cpf_valido(cpf):
+            listar_mac()
+
+    elif menu == 7:
+        nome_arquivo = input('Digite o nome do arquivo para salvar (ex: dados.json): ')
+        salvar_banco(dados)
+
+    elif menu == 8:
+        nome_arquivo = input('Digite o nome do arquivo para carregar (ex: dados.json): ')
+        carregar_banco(dados)
+
+
     else:
         print('essa opção não existe')
 
