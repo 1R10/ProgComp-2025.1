@@ -1,4 +1,4 @@
-# Aluno: Ryan Guilherme Costa de Moura; 20242014050039
+#ALUNO: Ryan Guilherme Costa de Moura; 20242014050039
 #ALUNO: Roberto Araujo Batista, Matricula: 20251014050041
 #PROFESSOR: Galileu Batista, CURSO: redes de computadores 2025.1, IFRN
 
