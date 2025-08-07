@@ -2,15 +2,6 @@
 #ALUNO: Roberto Araujo Batista, Matricula: 20251014050041
 #PROFESSOR: Galileu Batista, CURSO: redes de computadores 2025.1, IFRN
 
-
-'''
-2) Faça um programa que conta quantos números palíndromos existem entre
-10 e 100000. Um número é palíndromo quando tem o mesmo valor se lido da
-esquerda para a direita ou da direita para a esquerda. Ex: 98189 é palíndromo. Não
-use strings na sua resposta.
-'''
-
-
 def identificar_palindromo(numero):
     novonumero = numero
     numeroInverso = 0
